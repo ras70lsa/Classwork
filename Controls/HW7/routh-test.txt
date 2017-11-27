@@ -1,0 +1,478 @@
+{Attempt to execute SCRIPT testRouth as a function:
+/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('testRouth', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m', 14)" style="font-weight:bold">testRouth</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m',14,0)">line 14</a>)
+testRouth(p1);
+} 
+testRouth
+{Attempt to execute SCRIPT testRouth as a function:
+/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('testRouth', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m', 10)" style="font-weight:bold">testRouth</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m',10,0)">line 10</a>)
+testRouth(p1);
+} 
+testRouth
+{Attempt to execute SCRIPT testRouth as a function:
+/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('testRouth', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m', 10)" style="font-weight:bold">testRouth</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m',10,0)">line 10</a>)
+testRouth(p1);
+} 
+testRouth
+{Undefined function or variable 'K'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('testRouth', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m', 10)" style="font-weight:bold">testRouth</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m',10,0)">line 10</a>)
+a = [1 2 K];
+} 
+testRouth
+{Undefined function or variable 'p'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('testRouth', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m', 13)" style="font-weight:bold">testRouth</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m',13,0)">line 13</a>)
+disp(p)
+} 
+testRouth
+[ 1, 2, K]
+ 
+[ 1, K]
+[ 2, 0]
+[ K, 0]
+ 
+testRouth
+{Error: <a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/testRouth.m',12,21)">File: testRouth.m Line: 12 Column: 21
+</a>Unexpected MATLAB expression.
+} 
+testRouth
+[ 1, 12, K + 60, 160 - 4*K, 4*K + 192]
+ 
+[                               1,    K + 60, 4*K + 192]
+[                              12, 160 - 4*K,         0]
+[                 (4*K)/3 + 140/3, 4*K + 192,         0]
+[ -(4*K^2 + 16*K - 3872)/(K + 35),         0,         0]
+[                       4*K + 192,         0,         0]
+ 
+Problem7
+
+r =
+
+      -4.1145 +     1.8429i
+      -4.1145 -     1.8429i
+      -1.8855 +     2.4674i
+      -1.8855 -     2.4674i
+
+Problem7
+
+r =
+
+           -6 +     7.0405i
+           -6 -     7.0405i
+  -3.3397e-07 +     1.8994i
+  -3.3397e-07 -     1.8994i
+
+Problem7
+
+r =
+
+           -6 +     7.0405i
+           -6 -     7.0405i
+    4.996e-15 +     1.8994i
+    4.996e-15 -     1.8994i
+
+Problem7
+
+r =
+
+           -6 +     7.0405i
+           -6 -     7.0405i
+    4.996e-15 +     1.8994i
+    4.996e-15 -     1.8994i
+
+Problem7
+
+r =
+
+           -6 +     7.0405i
+           -6 -     7.0405i
+    4.996e-15 +     1.8994i
+    4.996e-15 -     1.8994i
+
+rootLocusGenerator
+rootLocusGenerator
+rootLocusGenerator
+[Warning: This zpk model has a complex gain or some complex zeros or poles that do not come in conjugate pairs.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ctrlMsgUtils.warning', '/Applications/MATLAB_R2016a.app/toolbox/shared/controllib/general/+ctrlMsgUtils/warning.m', 25)" style="font-weight:bold">ctrlMsgUtils.warning</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/shared/controllib/general/+ctrlMsgUtils/warning.m',25,0)">line 25</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('zpk', '/Applications/MATLAB_R2016a.app/toolbox/control/ctrlmodels/@zpk/zpk.m', 366)" style="font-weight:bold">zpk</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/control/ctrlmodels/@zpk/zpk.m',366,0)">line 366</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('rootLocusGenerator', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/rootLocusGenerator.m', 3)" style="font-weight:bold">rootLocusGenerator</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/rootLocusGenerator.m',3,0)">line 3</a>)] 
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('DynamicSystem/rlocus', '/Applications/MATLAB_R2016a.app/toolbox/control/ctrldesign/@DynamicSystem/rlocus.m', 65)" style="font-weight:bold">DynamicSystem/rlocus</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/control/ctrldesign/@DynamicSystem/rlocus.m',65,0)">line 65</a>)
+Cannot compute the root locus of models with complex data.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('rootLocusGenerator', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/rootLocusGenerator.m', 4)" style="font-weight:bold">rootLocusGenerator</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/rootLocusGenerator.m',4,0)">line 4</a>)
+rlocus(GH);
+} 
+rootLocusGenerator
+[Warning: This zpk model has a complex gain or some complex zeros or poles that do not come in conjugate pairs.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ctrlMsgUtils.warning', '/Applications/MATLAB_R2016a.app/toolbox/shared/controllib/general/+ctrlMsgUtils/warning.m', 25)" style="font-weight:bold">ctrlMsgUtils.warning</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/shared/controllib/general/+ctrlMsgUtils/warning.m',25,0)">line 25</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('zpk', '/Applications/MATLAB_R2016a.app/toolbox/control/ctrlmodels/@zpk/zpk.m', 366)" style="font-weight:bold">zpk</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/control/ctrlmodels/@zpk/zpk.m',366,0)">line 366</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('rootLocusGenerator', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/rootLocusGenerator.m', 3)" style="font-weight:bold">rootLocusGenerator</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/rootLocusGenerator.m',3,0)">line 3</a>)] 
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('DynamicSystem/rlocus', '/Applications/MATLAB_R2016a.app/toolbox/control/ctrldesign/@DynamicSystem/rlocus.m', 65)" style="font-weight:bold">DynamicSystem/rlocus</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/control/ctrldesign/@DynamicSystem/rlocus.m',65,0)">line 65</a>)
+Cannot compute the root locus of models with complex data.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('rootLocusGenerator', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/rootLocusGenerator.m', 4)" style="font-weight:bold">rootLocusGenerator</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/rootLocusGenerator.m',4,0)">line 4</a>)
+rlocus(GH);
+} 
+rootLocusGenerator
+rootLocusGenerator
+rootLocusGenerator
+rootLocusGenerator
+rootLocusGenerator
+rootLocusGenerator
+Problem5
+
+r =
+
+       -3.455 +    0.28454i
+       -3.455 -    0.28454i
+        -1.09 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.0444 +     4.6316i
+      -3.0444 -     4.6316i
+      -1.9113 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+       -3.069 +     3.6539i
+       -3.069 -     3.6539i
+       -1.862 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.9544
+      -3.0347
+      -1.0109
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+       -3.069 +     3.6539i
+       -3.069 -     3.6539i
+       -1.862 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.8674
+      -3.1033
+      -1.0293
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Select a point in the graphics window
+
+selected_point =
+
+      -2.2986
+
+
+K =
+
+       19.188
+
+
+p =
+
+      -2.2986
+      -1.3052
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Select a point in the graphics window
+
+selected_point =
+
+      -1.3128
+
+
+K =
+
+         18.9
+
+
+p =
+
+      -2.2852
+      -1.3128
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Select a point in the graphics window
+<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/matlab/uitools/ginput.m',218,1)">218 </a>set(fig,'WindowButtonMotionFcn',@(o,e) updateCrossHair(o,initialState.CrossHair));
+if system_dependent('IsDebugMode')==1, dbquit; end
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ginput', '/Applications/MATLAB_R2016a.app/toolbox/matlab/uitools/ginput.m', 81)" style="font-weight:bold">ginput</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/matlab/uitools/ginput.m',81,0)">line 81</a>)
+Interrupted by figure deletion
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('DynamicSystem/rlocfind', '/Applications/MATLAB_R2016a.app/toolbox/control/ctrlanalysis/@DynamicSystem/rlocfind.m', 35)" style="font-weight:bold">DynamicSystem/rlocfind</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/control/ctrlanalysis/@DynamicSystem/rlocfind.m',35,0)">line 35</a>)
+   [re,im] = ginput(1);    % Get one point
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Problem5', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/Problem5.m', 4)" style="font-weight:bold">Problem5</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/Problem5.m',4,0)">line 4</a>)
+clf;
+} 
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Select a point in the graphics window
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ginput', '/Applications/MATLAB_R2016a.app/toolbox/matlab/uitools/ginput.m', 81)" style="font-weight:bold">ginput</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/matlab/uitools/ginput.m',81,0)">line 81</a>)
+Interrupted by figure deletion
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('DynamicSystem/rlocfind', '/Applications/MATLAB_R2016a.app/toolbox/control/ctrlanalysis/@DynamicSystem/rlocfind.m', 35)" style="font-weight:bold">DynamicSystem/rlocfind</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/control/ctrlanalysis/@DynamicSystem/rlocfind.m',35,0)">line 35</a>)
+   [re,im] = ginput(1);    % Get one point
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Problem5', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/Problem5.m', 5)" style="font-weight:bold">Problem5</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/Problem5.m',5,0)">line 5</a>)
+[K,p] = rlocfind(sys)
+} 
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Select a point in the graphics window
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ginput', '/Applications/MATLAB_R2016a.app/toolbox/matlab/uitools/ginput.m', 81)" style="font-weight:bold">ginput</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/matlab/uitools/ginput.m',81,0)">line 81</a>)
+Interrupted by figure deletion
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('DynamicSystem/rlocfind', '/Applications/MATLAB_R2016a.app/toolbox/control/ctrlanalysis/@DynamicSystem/rlocfind.m', 35)" style="font-weight:bold">DynamicSystem/rlocfind</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2016a.app/toolbox/control/ctrlanalysis/@DynamicSystem/rlocfind.m',35,0)">line 35</a>)
+   [re,im] = ginput(1);    % Get one point
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Problem5', '/Users/ryanst.pierre/Desktop/HW/Controls/HW7/Problem5.m', 5)" style="font-weight:bold">Problem5</a> (<a href="matlab: opentoline('/Users/ryanst.pierre/Desktop/HW/Controls/HW7/Problem5.m',5,0)">line 5</a>)
+[K,p] = rlocfind(sys)
+} 
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+
+r =
+
+      -3.1812 +     2.0303i
+      -3.1812 -     2.0303i
+      -1.6375 +          0i
+
+Select a point in the graphics window
+
+selected_point =
+
+       0.2644 +    0.79197i
+
+
+K =
+
+       9.0612
+
+
+p =
+
+      -3.1165 +     2.7083i
+      -3.1165 -     2.7083i
+      -1.7669 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+Problem5
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+
+Problem5
+
+sys =
+ 
+        (s+2)
+  -----------------
+  (s+1) (s+3) (s+4)
+ 
+Continuous-time zero/pole/gain model.
+
+
+r =
+
+      -3.3601 +    0.96298i
+      -3.3601 -    0.96298i
+      -1.2798 +          0i
+

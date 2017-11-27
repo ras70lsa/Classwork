@@ -1,0 +1,82 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[latin1]{inputenc}
+\usepackage{amsthm}
+\usepackage{varwidth}
+\usepackage{verbatim}
+
+\newenvironment{centerverbatim}{%
+  \par
+  \centering
+  \varwidth{\linewidth}%
+  \verbatim
+}{%
+  \endverbatim
+  \endvarwidth
+  \par
+}
+
+
+\title{HW \#1}
+\author{Ryan St.Pierre}
+\date{\today}
+
+\begin{document}
+\maketitle
+\pagebreak
+
+\noindent
+\textbf{Problem 1A}
+
+Prove that if there is a solution it is at most 2m-1.
+
+Proof by contradiction.
+
+Assume (towards contradiction) that there is a solution $A$ of $n$ potions such that the amount of healing is $2m-1$. Let $S$ be the array of the amount of healing associated with each potion in the solution set. In other words let $s$ be the array [$w_1$...$w_n$] where $w_k$ corresponds to the $k^{\text{th}}$ potion used to heal the Pokemon.
+
+Let $a[i]$ be the sum of values in $s$ for index 0 to $i$ in $s$. By the assumption made about $A$ it must follow that $a[n] = 2m - 1$.
+
+Additionally, given the constraint of the problem (i.e. the healing power for all potions must be less than m), $1 < S[n] < m$. Therefore:
+$$m \leq a[n-1] \leq 2m-2$$
+
+This shows for any valid value of $S[n]$ there exists a solution $B$ of $n-1$ potions such that the amount of healing is between $m$ and $2m-2$. Any of the possible values for this solution $B$ are both valid (have healing power $\geq m$) and has lower healing power than $A$. Since all valid solutions must minimize the total healing power and solution $B$ exists with healing power less than $A$, $A$ must not be a valid solution. Thus, by contradiction $A$ cannot be a valid solution and the healing $2m-1$ cannot exist as a solution.
+
+It can easily be seen that there is a solution that has total healing power equal to $2m-2$. This is shown below:
+
+\begin{center}
+m = 4  Available potions = [3, 3]
+
+The only valid solution is S = \{3,3\}
+
+This solution has total healing value, $h$, satisfying $h = 6 = 2 * (4) - 2 = 2m -2$
+\end{center}
+
+Since all potions have integer healing values it must hold true that $2m-2$ is the upper bound for valid solutions
+
+
+\noindent
+\textbf{Problem 1B}
+
+Let $p$ be the list of available potions. If we consider the $i^{\text{th}}$ potion in $p$ we can either chose to include in our summation of values from 0 to $i$ or not.
+
+\begin{itemize}
+  \item \textit{(not include $i$)}.
+  \item \textit{(include $i$)}.
+\end{itemize}
+
+We can produce the value $j$ if \textit{either} of these above cases is correct. Therefore:
+
+\begin{centerverbatim}
+a[i,j] = a[i-1, j] || a[i-1, j-p[i]]
+\end{centerverbatim}
+
+\textit{Base Cases: }
+
+\begin{centerverbatim}
+a[i,0] = 0 for 0 < i < n
+\end{centerverbatim}
+
+
+\end{document}

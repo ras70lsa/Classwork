@@ -1,0 +1,120 @@
+import math
+from klampt.math import so3,se3,vectorops
+
+def interpolate_linear(a,b,u):
+    """Interpolates linearly in cartesian space between a and b."""
+    return vectorops.madd(a,vectorops.sub(b,a),u)
+
+def interpolate_euler_angles(ea,eb,u,convention='zyx'):
+    """Interpolates between the two euler angles.
+    TODO: The default implementation interpolates linearly.  Can you
+    do better?
+    Idea: chose the shortest path in 2D space for each angle individually
+    """
+    angle_x_inter = interpolate_angle(ea[0],eb[0],u)
+
+    angle1y = ea[1]
+    angle2y = eb[1]
+    # As described in the problem statement the convention for the y is given between
+    # -pi/2 and pi/2. The following if statments convert this range to 0 to 2pi to be
+    # compatible with the interpolate_angle function that I have written
+    if (angle1y < 0):
+        angle1y = angle1y + 2 * math.pi
+    if (angle2y < 0):
+        angle2y = angle2y + 2 * math.pi
+
+    angle_y_inter = interpolate_angle(angle1y,angle2y,u)
+    angle_z_inter = interpolate_angle(ea[2],eb[2],u)
+    interpolation = (angle_x_inter, angle_y_inter, angle_z_inter)
+    return interpolation
+
+#input: a1 - angle 1 (radian), a2 - angle 2 (radian)
+#both angles are given between 0 and 2pi
+#result: shortest linear interpolation between a1 and a2 on the 2D unit circle
+def interpolate_angle(a1, a2, u):
+    distance1 = math.fabs(a1 - a2)
+    distance2 = math.fabs(a1 - (a2 - 2 * math.pi))
+    if (distance2 < distance1):
+        a2 = a2 - 2 * math.pi
+    angle_inter = a1 + u*(a2-a1)
+    return angle_inter
+
+def euler_angle_to_rotation(ea,convention='zyx'):
+    """Converts an euler angle representation to a rotation matrix.
+    Can use arbitrary axes specified by the convention
+    arguments (default is 'zyx', or roll-pitch-yaw euler angles).  Any
+    3-letter combination of 'x', 'y', and 'z' are accepted.
+    """
+    axis_names_to_vectors = dict([('x',(1,0,0)),('y',(0,1,0)),('z',(0,0,1))])
+    axis0,axis1,axis2=convention
+    R0 = so3.rotation(axis_names_to_vectors[axis0],ea[0])
+    R1 = so3.rotation(axis_names_to_vectors[axis1],ea[1])
+    R2 = so3.rotation(axis_names_to_vectors[axis2],ea[2])
+    return so3.mul(R0,so3.mul(R1,R2))
+
+#TODO: play around with these euler angles -- they'll determine the start and end of the rotations
+#ea = [math.pi/4,0,0]
+#eb = [math.pi*7/4,0,0]
+#ea = [0,0,math.pi/4]
+#eb = [0,0,math.pi*7/4]
+#ea = [0,math.pi/4, 0]
+#eb = [0,math.pi/3, 0]
+#ea = [0,math.pi/4, 0]
+#eb = [0,-math.pi/3, 0]
+#ea = [math.pi/4,math.pi/4,math.pi]
+#eb = [math.pi*7/4,0,3*math.pi/8]
+ea = [0,0,0] #A
+eb = [math.pi,0,math.pi] #B
+#ea = [0,0,0] #C
+#eb = [0,-math.pi,0] #
+#Note: Rotation from A -> and C -> D have the same start and end location
+#However, the transient behavior of these rotations is very different depending
+#on whether or not euler angle interpolation or so3 interpolation is used
+#This discrepancy is described in depth in the written section below
+
+def do_interpolate(u):
+    global ea,eb
+    #linear interpolation with euler angles
+    e = interpolate_euler_angles(ea,eb,u)
+    return euler_angle_to_rotation(e)
+    #TODO: at the end of Problem 4.2, comment out the 3 prior lines and
+    #uncomment this one.
+    #return so3.interpolate(euler_angle_to_rotation(ea),euler_angle_to_rotation(eb),u)
+
+
+# Use the space below to answer the written questions posed in Problem 4.2.
+#
+# Question 1: Explain Euler angle excessive rotation
+#
+# The Euler angle excessively rotates because it is interpolating each angle of rotation (3)
+# linearly and independently. This independent interpolation on each of the angles does not
+# necessarily correspond to the shortest path of rotations in so3 space. This is best
+# seen with an example. The rotation from [0, 0, 0] to [pi, 0, pi] is a pi rotation in z
+# and pi rotation in x. However, it can be observed that this is simply a rotation from
+# [0, 0, 0] to [0, pi, 0], or a pi rotation in y. Despite this the Euler angle interpolation
+# still rotates about z and x, not y, causing a "wiggle" behavior, in which there is excessive
+# rotation. In other words, the Euler angle interpolation does not check the whole solution
+# set of angles and chose the best/shortest path. Rather, as coded in the interpolate_euler_angles
+# method is optimizes the rotation of each angle separately in 2D space, not the whole problem
+# in so3 space.
+#
+# Question 2: What is klampt.so3.interpolate doing so differently?
+#
+# As explained above the Euler angle interpolation has excessive rotation, caused by a naive
+# interpolation of each angle without consideration for a shorter path. Thus, it must be true
+# that klampt is somehow considering other rotations or other rotation representations
+# to find the smallest, geodesic path in so3 space. This is clearly observed when I comment out
+# the so3.interpolate call in the do_interpolate method. For the example given above (in Question 1) the
+# program rotates pi about the y axis despite the rotations given in z and x. In other words, the klampt
+# interpolate is intelligent enough to chose the shortest path in so3 space. This can be thought of
+# visually as the interpolation choosing the geodesic arc on the so3 space represented by a sphere.
+#
+# To achieve this functionality the klampt interpolate must either be optimizing the Euler angles
+# at the onset or representing the rotation in a different format that is better suited for interpolation.
+# Based on the lectures I hypothesize that the klampt interpolate is representing the rotation in axis
+# angle form. In axis angle form there is only one angle to interpolate, which could lead to a smoother
+# and geodesic interpolation. Imagine we want a rotation that starts at A and proceeds to B.
+# If we let v be a vector equal to the axis of A transpose times B and theta be the angle of A transpose
+# times B, then a geodesic rotation can be achieved by multiplying A times an axis angle rotation matrix
+# of parameters s * theta and v, where s is the interpolation value in [0,1]. Although klampt interpolate
+# might not doing this specifically, I think it is doing something similar to chose the geodesic path.

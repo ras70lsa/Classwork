@@ -1,0 +1,118 @@
+Ryan St. Pierre
+September 11, 2017
+System Analysis with Laplace Transforms
+> restart;
+Helpful functions
+> with(inttrans); -1;
+> u := proc (t) options operator, arrow; Heaviside(t) end proc; -1;
+> PAR := proc (Za, Zb) options operator, arrow; simplify(Za*Zb/(Za+Zb)) end proc; -1;
+> SCS := proc (X) options operator, arrow; sort(collect(simplify(expand(numer(X))/expand(denom(X))), s), s) end proc; -1;
+> IL := proc (X, s, t) options operator, arrow; simplify(convert(invlaplace(convert(X, parfrac, s), s, t), expsincos)) end proc; -1;
+> ILTS := proc (X, s, t) options operator, arrow; simplify(convert(invlaplace(X, s, t), expsincos)) end proc; -1;
+Transfer Function
+> G := proc (M, fv, K) options operator, arrow; (fv*s+K)/(M*s^2+fv*s+K) end proc; -1;
+Case one
+
+> M := 1;
+
+> fv := 2;
+
+> K := 5;
+
+> x1a := sin(2*t);
+
+> X1a := SCS(laplace(x1a, t, s));
+
+> X2a := G(M, fv, K)*X1a;
+
+> x2a := IL(X2a, s, t);
+
+Case two
+
+> M := 1;
+
+> fv := 6;
+
+> K := 5;
+
+> x1b := sin(2*t);
+
+> X1b := SCS(laplace(x1b, t, s));
+
+> X2b := G(M, fv, K)*X1b;
+
+> x2b := IL(X2b, s, t);
+
+Case three
+
+> M := 1;
+
+> fv := 2;
+
+> K := 5;
+
+> x1c := sin(10*t);
+
+> X1c := SCS(laplace(x1c, t, s));
+
+> X2c := G(M, fv, K)*X1c;
+
+> x2c := IL(X2c, s, t);
+
+Case four
+
+> M := 1;
+
+> fv := 6;
+
+> K := 5;
+
+> x1d := sin(10*t);
+
+> X1d := SCS(laplace(x1d, t, s));
+
+> X2d := G(M, fv, K)*X1d;
+
+> x2d := IL(X2d, s, t);
+
+Plots
+
+Case 1
+> plot([x1a, x2a], t = 0 .. 10*Pi, color = ["Blue", "Red"], title = "Case 1 - fv=2, K=5", legend = ["x1(t)", "x2(t)"], labels = ["Time (s)", "Distance (m)"]); 1;
+
+Case 2
+> plot([x1b, x2b], t = 0 .. 10*Pi, color = ["Blue", "Red"], title = "Case 2 - fv=6, K=5", legend = ["x1(t)", "x2(t)"], labels = ["Time (s)", "Distance (m)"]); 1;
+
+Case 3
+> plot([x1c, x2c], t = 0 .. 2*Pi, color = ["Blue", "Red"], title = "Case 3 - fv=2 K=5", legend = ["x1(t)", "x2(t)"], labels = ["Time (s)", "Distance (m)"]); 1;
+
+Case 4
+> plot([x1d, x2d], t = 0 .. 2*Pi, color = ["Blue", "Red"], title = "Case 4 - fv=6 K=5", legend = ["x1(t)", "x2(t)"], labels = ["Time (s)", "Distance (m)"]); 1;
+
+Discussion
+
+It is clear from the above plots that in this system the output resembles the
+shape of the input, as they mimick each other in shape. However, it is apparent
+that larger damping coefficient make the output more closely resemble the input.
+In other words, larger damping coefficients correspond to a phase shift closer
+to 0 and gain closer to 1. In Case 2, as the damping coefficient is increased
+from Case 1 at the same frequency, the output "overshoots" the input by less and
+is shifted by a smaller amount. The same observation is made from Cae 4 to Case
+2, where the increasing damping coefficient causes the output to "undershoot" by
+less. This observation can also be made emperically from the transfer function.
+As the damping coefficient increases to infinity the s terms in the numerator
+and the denominator dominate the other two terms. In other words, the limit of
+the transfer function as the damping coefficient approaches infinity is 1.
+
+Case 3 and 4 have a higher frequency than Case 1 and 2. Case 3 and 4 also have a
+larger phase shift and smaller gain, as the output in Case 1 and 2 have
+magnitude larger than the input and Case 3 and 4 have magnitude smaller than the
+input. From these observations it can be concluded that the gain of the transfer
+funciton is inversely proportional to frequency (as frequency increases gain
+decreases) while the phase shift of the transfer funciton is proportional to the
+frequency (as frequency increases phase angle increases).
+
+For more please reference my attached PDF on Sakai, which includes work and
+further discussion. Particularly this PDF contains plots from Matlab and
+discusses the impact of frequency on the transfer function.
+

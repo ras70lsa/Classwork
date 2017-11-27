@@ -1,0 +1,99 @@
+from klampt import *
+from klampt.math import vectorops,so3,se3
+import math
+
+def lab2b(L1,L2,L3,point):
+    """
+    Compute all IK solutions of a 3R manipulator.  The joint axes in the reference configuration
+    are ZYY, with each link's origin displaced by a given amount on the X axis.
+    In:
+    - L1, L2, L3: the link lengths
+    - point: the target position (x,y,z)
+    Out:
+    - A pair (n,solutionList) where n is the number of solutions (either 0,
+      1, 2, 4, or float('inf')) and solutionList is a list of all solutions.
+      In the n=0 case, it should be an empty list [], and in the n=inf case
+      it should give one example solution.
+
+      Each solution is a 3-tuple giving the joint angles, in radians.
+    """
+    x = point[0]
+    y = point[1]
+    z = point[2]
+    zRotation = math.atan2(y,x)
+    distanceXY = math.sqrt(x**2 + y**2) - L1
+    solsInfo = ik_2(L2,L3,z,distanceXY,zRotation,0)
+    sols = solsInfo[0]
+    infiniteSols = solsInfo[1]
+
+    zRotation2 = zRotation + math.pi
+    distanceXY2 = math.sqrt(x**2 + y**2) + L1
+    sols2Info = ik_2(L2,L3,z,distanceXY2,zRotation2,1)
+    sols2 = sols2Info[0]
+    infiniteSols2 = sols2Info[1]
+    sols = sols+sols2
+
+    numberSolutions = len(sols)
+    if (infiniteSols or infiniteSols2):
+        numberSolutions = float('inf')
+
+    return (numberSolutions ,sols)
+
+#IK for the 2R robot
+#returns a touple of (sols, inf) where sols is the solutions and inf indicates
+#whether or not there are infinite solutions
+def ik_2(L2,L3,z,distanceXY,zRotation,behind):
+    sols = []
+
+    magXd = math.sqrt(distanceXY**2 + z**2)
+
+    c3 = (magXd**2 - L2**2 - L3**2)/(2 * L2 * L3)
+    print "c3", c3
+    if (c3 == 1):
+        if (behind):
+            return ([(zRotation,math.pi,0)],0)
+        else:
+            return ([(zRotation,0,0)],0)
+
+    if (c3 == -1 and L2==L3):
+        if (behind):
+            return ([(zRotation,math.pi,0)],1)
+        else:
+            return ([(zRotation,0,-math.pi)],1)
+
+    if (c3 < 1 and c3 > -1):
+        q3 = math.acos(c3)
+        thetaD = math.atan2(z,distanceXY)
+        if (not behind):
+            thetaD = math.pi * 2 - thetaD
+        else:
+            thetaD = thetaD + math.pi
+
+        side1 = L3 * math.sin(q3)
+        side2 = L2 + L3 * math.cos(q3)
+        theta = math.atan2(side1, side2)
+
+        q2 = thetaD - theta
+        sol1 = (zRotation,q2,q3)
+        sols.append(sol1)
+
+        q3 = math.pi * 2 - q3
+        thetaD = math.atan2(z,distanceXY)
+        if (not behind):
+            thetaD = math.pi * 2 - thetaD
+        else:
+            thetaD = thetaD + math.pi
+        side1 = L3 * math.sin(q3)
+        side2 = L2 + L3 * math.cos(q3)
+        theta = math.atan2(side1, side2)
+
+        q2 = thetaD - theta
+        sol2 = (zRotation,q2,q3)
+        sols.append(sol2)
+
+    return (sols,0)
+
+def ik_goal_motion(t):
+    """Returns a point describing where the goal should be at time t"""
+    #return (-.35,0,0)
+    return (math.sin(t)*1.5+0.3,1.0*math.cos(t/2+0.5), abs((t % 3)*0.2-0.5 ) )

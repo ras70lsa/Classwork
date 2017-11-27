@@ -1,0 +1,116 @@
+from klampt import *
+from klampt.math import vectorops,so3,se3
+from klampt.model import ik
+import math
+import random
+
+# Question 1: How does random effect ability to find a solution?
+# The random seed makes the robot slightly better at tracking the object.
+# This is particuarly true for instances when the object is low (near the ground).
+# The Klamp't IK solver is iteratively trying to find a solution to the inverse
+# kinematics problem. Thus, the starting point of the robot will have an effect
+# on the solvers ability to find a solution. When the seed is not random the
+# seed given is an oreientation with each armature angle set to 0 -
+# corresponding to the robot pointing straigh upward. I believe this produces poor
+# results because this starting position is far from the position necessary to track
+# the object when it is low.
+# The random seed seems to make the robot more consistent at tracking the object.
+# In other words, unlike the non-random seed case, when the random seed is being used
+# it doesn't seem like there are any particularly bad areas where the robot struggles
+# to track the object.
+# All of this being said the random seed only marginally improves the performance of the robot.
+# The difference is almost indistinguishable. I think to see true improvements multiple random
+# seeds would have to be used. This is expanded upon in the answering of the question below.
+
+# Question 2: What would you do to make your IK solver more reliable?
+# To make my IK solver more reliable I would try several different random seeds.
+# The more random seeds that are tried per target location the more likely we
+# are to find a solution. However, this of course has a tradeoff. By adding random
+# seeds we are introducing more work.
+# Another way to get the robot to track the object more frequently would be to increase
+# the number of iterations in the solver.
+# Lastly, to make the robot more reliable we could tune the IK solver to have a smaller
+# tolerance. This would make the robot track the object with greater precision, but with
+# less frequency. In other words, it would have a smaller error when it finds a solution, but
+# it would find a solution less often
+
+def lab2c(robot,qseed,ee_link,ee_local_position,ee_local_axis,target,target_axis):
+    """In:
+    - robot: a RobotModel instance
+    - qseed: a seed configuration of the robot.
+    - ee_link: the index of the end effector's link
+    - ee_local_position: the position of the end effector, expressed in the frame
+      of link ee_link.
+    - ee_local_axis: the rotational axis of the end effector, expressed in
+      the frame of link ee_link.
+    - target: a 3d target position (x,y,z)
+    - target_axis: a 3d target direction for the end effector's axis (x,y,z)
+    Out: a triple (q,errpos,erraxis) giving
+    - q: the inverse kinematics optimized configuration of the robot, which (locally)
+      minimizes the distance between the end effector position/axis and the target position/axis
+    - errpos: The final distance between the end effector's world position
+      and the target position. (should be as close as possible to 0 given a
+      successful solution)
+    - erraxis: The final distance between the end effector's world axis and
+      the target axis.
+
+    You will need to examine the documentation of the klampt.ik module, specifically
+    the ik.objective and ik.solve functions.
+    """
+    #TODO: put your code here
+    ##HINT: set up an IK objective as follows to strictly constrain the link's
+    ##position and orientation
+    #goal = ik.objective(robot.link(ee_link),R=desired_rotation_of_link,t=desired_translation_of_link)
+    ##OR if you want to match some points lp1,lp2,..., given in the local
+    ##coordinate frame to points wp1,wp2,..., given in the global coordinate
+    ##frame
+    #goal = ik.objective(robot.link(ee_link),local=[lp1,lp2,...],world=[wp1,wp2,...,])
+    ##now seed the ik solver with the correct configuration (READ THE DOCS)...
+    #???
+    ##now solve
+    #if ik.solve(goal):
+    #    print "IK success!"
+    ##   now the robot model's configuration is changed, and you need to
+    ##   extract it. Your errpos and erraxis values should be very small
+    #else:
+    #    print "IK failure... returning best solution found"
+    ##   the robot model's configuration is changed, but your errpos and
+    ##   erraxis will not be close to 0
+
+    #print qseed
+    link = robot.link(ee_link)
+
+    point2Local = vectorops.madd(ee_local_position, ee_local_axis, 1)
+    point2World = vectorops.madd(target, target_axis, 1)
+
+    obj = ik.objective(link,local= [ee_local_position, point2Local], world=[target, point2World])
+
+    res = ik.solve(obj)
+
+    #if res:
+        #print "IK success!"
+    #else:
+        #print "Fail"
+
+    #obj = robot.objective(link, targetAxis, (0,0,0))
+    #obj = ik.objective(link,R=link.getTransform()[0],t=[0,0,0])
+    ee_world_position = link.getWorldPosition(ee_local_position)
+    ee_world_direction = link.getWorldDirection(ee_local_axis)
+    return (robot.getConfig(),vectorops.distance(ee_world_position,target),vectorops.distance(ee_world_direction,target_axis))
+
+def pick_ik_seed(robot):
+    """Returns an IK seed for use in the local IK solver"""
+    q = [0.0]*robot.numLinks()
+    qmin,qmax = robot.getJointLimits()
+    #TODO: see the difference when a random configuration is picked as seed
+    for i in range(robot.numLinks()):
+        #print random
+        q[i] = random.uniform(qmin[i],qmax[i])
+    return q
+
+def target_motion(t):
+    return (0.5*math.sin(t),0.7*math.cos(t*0.5),0.7+0.4*math.sin(t*0.7+0.5))
+
+def target_axis_motion(t):
+    """Returns the axis that should be met at time t"""
+    return (0,0,1)

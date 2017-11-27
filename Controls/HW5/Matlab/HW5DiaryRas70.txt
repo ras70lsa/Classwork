@@ -1,0 +1,188 @@
+clear; 
+
+syms K
+
+%%Problem 1
+p = [1 5 6+K K];
+[r1, re1, sc1] = RuthTableCalculator(p);
+r1
+ 
+r1 =
+ 
+[           1, K + 6]
+[           5,     K]
+[ (4*K)/5 + 6,     0]
+[           K,     0]
+ 
+
+%% Problem 3
+p = [1 142 6031 79002+ K];
+[r3, re3, sc3] = RuthTableCalculator(p);
+r3
+ 
+r3 =
+ 
+[                 1,      6031]
+[               142, K + 79002]
+[ 388700/71 - K/142,         0]
+[         K + 79002,         0]
+ 
+
+%% Problem 3b - select a value of K to yield oscillations
+kOsc = 777400;
+p = [1 142 6031 79002 + kOsc];
+[r3, re3, sc3] = RuthTableCalculator(p);
+r3
+ 
+r3 =
+ 
+[ 1, 6031]
+[ 1, 6031]
+[ 1,    0]
+[ 1,    0]
+ 
+
+%% Problem 4
+p = [1 7 15 13 4+K];
+[r4, re4, sc4] = RuthTableCalculator(p);
+r4 
+ 
+r4 =
+ 
+[                  1,    15, K + 4]
+[                  7,    13,     0]
+[               92/7, K + 4,     0]
+[ 250/23 - (49*K)/92,     0,     0]
+[              K + 4,     0,     0]
+ 
+
+%% Problem 4b - select a value of K to yield oscillations
+kOsc = -4;
+p = [1 7 15 13 4+kOsc];
+[r4, re4, sc4] = RuthTableCalculator(p);
+r4 %% does not work - not marginal stability
+ 
+r4 =
+ 
+[ 1, 15, 0]
+[ 7, 13, 0]
+[ 1,  0, 0]
+[ 1,  0, 0]
+[ 1,  0, 0]
+ 
+
+kOsc = 1000/49;
+p = [1 7 15 13 4+kOsc];
+[r4, re4, sc4] = RuthTableCalculator(p);
+r4 %% marginal stability 
+ 
+r4 =
+ 
+[ 1, 15, 1196/49]
+[ 7, 13,       0]
+[ 7, 13,       0]
+[ 1,  0,       0]
+[ 1,  0,       0]
+ 
+
+%% Problem 5
+p = [1 9 20 12 K];
+[r5, re5, sc5] = RuthTableCalculator(p);
+r5 
+ 
+r5 =
+ 
+[            1, 20, K]
+[            3,  4, 0]
+[         56/3,  K, 0]
+[ 4 - (9*K)/56,  0, 0]
+[            K,  0, 0]
+ 
+
+%% Problem 5b - select a value of K to yield oscillations
+kOsc = 224/9;
+p = [1 9 20 12 kOsc];
+[r5, re5, sc5] = RuthTableCalculator(p);
+r5
+ 
+r5 =
+ 
+[ 1, 20, 224/9]
+[ 3,  4,     0]
+[ 3,  4,     0]
+[ 1,  0,     0]
+[ 1,  0,     0]
+ 
+
+%% Problem 5b - select a value of K to yield oscillations
+kOsc = 224/9;
+p = [1 9 20 12 kOsc];
+[r5, re5, sc5] = RuthTableCalculator(p);
+r5
+ 
+r5 =
+ 
+[ 1, 20, 224/9]
+[ 3,  4,     0]
+[ 3,  4,     0]
+[ 1,  0,     0]
+[ 1,  0,     0]
+ 
+
+
+%% Problem 5c - find roots
+syms s
+expression = s^4 + 9*s^3 + 20*s^2 + 12*s + kOsc;
+factoredExpression = factor(expression)
+ 
+factoredExpression =
+ 
+[ 1/9, 3*s^2 + 4, 3*s^2 + 27*s + 56]
+ 
+roots5c = roots(p)
+
+roots5c =
+
+  -5.7583 + 0.0000i
+  -3.2417 + 0.0000i
+   0.0000 + 1.1547i
+   0.0000 - 1.1547i
+
+
+%% Problem 7
+p = [1 5.45+K 11.91+11*K 43.65+K];
+[r7, re7, s7] = RuthTableCalculator(p);
+r7 
+ 
+r7 =
+ 
+[                                                           1, 11*K + 1191/100]
+[                                                  K + 109/20,      K + 873/20]
+[ -(K - (11*K + 1191/100)*(K + 109/20) + 873/20)/(K + 109/20),               0]
+[                                                  K + 873/20,               0]
+ 
+
+kCritical = -0.31547;
+e = 0.00001;
+kUnstable = kCritical - e;
+p = [1 5.45+kUnstable 11.91+11*kUnstable 43.65+kUnstable];
+[r, re, sc7] = RuthTableCalculator(p);
+sc7 %% 2 sign changes - unstable
+
+sc7 =
+
+     2
+
+
+kStable = kCritical + e;
+p = [1 5.45+kStable 11.91+11*kStable 43.65+kStable];
+[r, re, sc7] = RuthTableCalculator(p);
+sc7  %% 0 sign changes - stable
+
+sc7 =
+
+     0
+
+
+diary off
+

@@ -1,0 +1,484 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[latin1]{inputenc}
+\usepackage{amsthm}
+
+\title{HW \#1}
+\author{Ryan St.Pierre}
+\date{\today}
+
+\begin{document}
+\maketitle
+\pagebreak
+
+\noindent
+\textbf{Problem 1A}
+
+$$T(n)=T(\frac{n}{2}) + 2T(\frac{n}{4}) + n^2$$
+
+I originally thought about this problem using the recursive tree approach. The first layer has 1 block of n size. The second layer has 1 block of $\frac{n}{2}$ size and 2 blocks of $\frac{n}{4}$ size. The third layer has 1 block of  $\frac{n}{2}$ size, 4 blocks of $\frac{n}{8}$ size, and 4 blocks of $\frac{n}{16}$ size. This pattern continues. However, as seen below, I only needed three layers of the recursion tree to establish the necessary pattern for merge work per layer.
+
+For the sake of clarity the recurrence relation at each level of the recursive tree is given below - where at each level I note the merge work done and carry through the work not accounted for to the next level.
+
+\begin{itemize}
+  \setlength{\itemsep}{-5pt}
+  \item[] Layer 1 (i=0)
+  \begin{itemize}
+     \itemsep0em
+     \item[] $T(\frac{n}{2}) + 2 T(\frac{n}{4}) + n^2$
+     \item[] Layer (additional) merge cost: $n^2$
+  \end{itemize}
+  \item[] Layer 2 (i=1)
+  \begin{itemize}
+     \itemsep0em
+     \item[] $T(\frac{n}{2}) + 2 T(\frac{n}{4}) = T(\frac{n}{4}) + 2 T(\frac{n}{8}) + (\frac{n}{2})^2 + 2(T(\frac{n}{8}) + 2T(\frac{n}{16}) + (\frac{n}{4})^2)$ \\
+     = $T(\frac{n}{4}) + 4T(\frac{n}{8}) + 4T(\frac{n}{16}) + (\frac{3}{8})n^2$
+     \item[] Layer (additional) merge cost: $(\frac{3}{8})n^2$
+   \end{itemize}
+  \item[] Layer 3 (i=2)
+  \begin{itemize}
+     \itemsep0em
+     \item[] $T(\frac{n}{4}) + 4T(\frac{n}{8}) + 4T(\frac{n}{16}) = T(\frac{n}{8}) + 2 T(\frac{n}{16}) + (\frac{n}{4})^2 + 4(T(\frac{n}{16})+2T(\frac{n}{32})+(\frac{n}{8})^2) + 4(T(\frac{n}{32}) + 2T(\frac{n}{32}) + (\frac{n}{16})^2)$
+     \item[] = $T(\frac{n}{8}) + 6T(\frac{n}{16}) + 12T(\frac{n}{32}) + 8T(\frac{n}{64}) + (\frac{9}{64})n^2$
+     \item[] Layer (additional) merge cost: $(\frac{9}{64})n^2$
+  \end{itemize}
+\end{itemize}
+
+At this point we can hypothesize that the additional merge work per layer is equal to $\frac{3^i}{8^i} n^2$, which is satisfied by layers 1-3. We will use this to find our running time and prove its correctness - by showing it satisfies the recurrence relation for all n. First, we must establish the number of layers in the recursive tree. By simple observation the recursive tree is not balanced. However, its longest length is $\log_2 n$, which we will use to approximate the running time. Since we are looking at asymptotic behavior this approximation should have no effect on our final result.
+
+$
+\renewcommand{\arraystretch}{1.8}
+\begin{array} {lclr}
+T(n) &  = & \sum_{i=1}^{\# of layers} \text{merge cost of layer}_i \\
+& = & \sum_{i=1}^{\log_2 n} \frac{3^i}{8^i} n^2 \\
+& = & n^2 \sum_{i=1}^{\log_2 n + 1} (\frac{3}{8})^i & \text{geometric series}  \\
+& = & n^2  \frac{1-(\frac{3}{8})^{\log_2n}}{1-\frac{3}{8}} \\
+\end{array}
+$
+
+As $n$ approaches $\infty$ the expression $n^2  \frac{1-(\frac{3}{8})^{\log_2n + 1}}{1-\frac{3}{8}}$ approaches $\frac{8}{5}n^2$. Therefore, $T(n)=\frac{8}{5} n^2$ for large n and $T(n) = \Theta(n^2)$.
+
+$$\mathbf{T(n) = \Theta(n^2)}$$
+
+\vspace{1mm} %5mm vertical space
+
+\noindent
+The found running time is shown to satisfy the recurrence relation below:
+
+\vspace{3mm} %5mm vertical space
+$
+\begin{array} {lcll}
+T(k) &  = & T(\frac{k}{2}) + 2T(\frac{k}{4}) + k^2 & \text{from recursion}\\
+\frac{8}{5} k^2 & = & \frac{8}{5} (\frac{k}{2})^2 + 2 \frac{8}{5} (\frac{k}{4})^2 + k^2 & \text{from induction hypothesis}\\
+\frac{8}{5} k^2 & = & \frac{2}{5} k^2 + \frac{1}{5} k^2 + k^2 \\
+\frac{8}{5} k^2 & = & \frac{8}{5} k^2
+\end{array}
+$
+
+\vspace{8mm} %5mm vertical space
+
+\newpage
+\noindent
+\textbf{Problem 1B}
+
+$$T(n)=n^{1/3}T(n^{2/3}) + n$$
+
+To analyze the running time of this problem I will start by finding the merge cost of the top layer. I will then find the running time expression for the succeeding layer, ignoring the merge cost of the layer above, which has already been accounted. I will then find the merge cost of this layer, repeating this process until I find a relationship between the layer and merge cost. This approach is similar to the recursive tree approach - but I find my work semantically easier to follow.
+
+\begin{itemize}
+  \setlength{\itemsep}{-5pt}
+  \item[] Layer 1 (i=0)
+  \begin{itemize}
+     \itemsep0em
+     \item[] $T(n)=n^{1/3}T(n^{2/3}) + n$
+     \item[] Layer (additional) merge cost: $n$
+  \end{itemize}
+  \item[] Layer 2 (i=1)
+  \begin{itemize}
+     \itemsep0em
+     \item[] $n^{1/3}T(n^{2/3})=n^{1/3}(n^{2/9}T(n^{4/9}) + n^{2/3})$
+     \item[] $n^{1/3}T(n^{2/3})=n^{5/9}(n^{4/9}) + n$
+     \item[] Layer (additional) merge cost: $n$
+  \end{itemize}
+  \item[] Layer 3 (i=2)
+  \begin{itemize}
+     \itemsep0em
+     \item[] $n^{5/9}T(n^{4/9})=n^{5/9}(n^{4/27}T(n^{8/27}) + n^{4/9})$
+     \item[] $n^{5/9}T(n^{4/9})=n^{19/27}T(n^{8/27}) + n$
+     \item[] Layer (additional) merge cost: $n$
+  \end{itemize}
+\end{itemize}
+
+At this point we can guess that the merge cost per layer is $n$. We will use this guess to find the running time and then verify its correctness. However, first we must find the number of layers (analogous to the length of the recursive tree). We find that for each increase in layer $n$ maps to $n^{2/3}$ (a non-linear relationship). We will contrive a system below in which $q$ is defined in such a way that it decrements by one each layer. We will then find $q$ in terms of the $n$ to get the length of the tree.
+
+\begin{center}
+    Let $n=2^p$, thus $p=\log_2 n$ \\
+    \vspace{3mm}
+    Let $n'$ denote the size of each problem in the $i+1$ layer with respect to layer $i$, where the size of the problem is $n$. Let $p$ and $q$ also follow this notation. From this notation it follows: \\
+    \vspace{1mm}
+    $n'=n^{2/3}$ thus $p'=\frac{2}{3}p$ \\
+     \vspace{2mm}
+    Next, define $q$ such that $p=(3/2)^q$, meaning $q=\log_{3/2} p$\\
+    Using these definitions it is shown below that $q' = q-1$
+    \\
+    \vspace{3mm}
+    $p' = \frac{2}{3}p $ \\
+    $p' = \frac{2}{3}(\frac{3}{2})^q$ \\
+    $p' = (\frac{3}{2})^(q-1)$ \\
+    \vspace{3mm}
+    Finally, we find $q$, the linearly decremented variable, in terms of $n$.
+    \vspace{2mm}
+    $p=\log_2 n$ and $q=\log_{3/2}p$, therefore $q=\log_{3/2}\log_2 n$ \\
+    This means the depth of the recursive tree is $\log_{3/2}\log_2 n$
+
+\end{center}
+
+Now, given the recursive tree depth, the running time can be analyzed as follows.
+\vspace{1mm}
+
+\renewcommand{\arraystretch}{1.5}
+$
+\begin{array} {lcl}
+T(n) &  = & \sum_{i=1}^{\# of layers} \text{merge cost of layer}_i \\
+& = & \sum_{i=1}^{\log_{3/2}\log_2 n} n \\
+& = & n \sum_{i=1}^{\log_{3/2}\log_2 n} 1 \\
+T(n) & = & n \log_{3/2}\log_2 n \\
+\end{array}
+$
+
+\vspace{3mm} %5mm vertical space
+
+$$\mathbf{T(n) = \Theta(\textbf{{n log log n}})}$$
+
+\vspace{3mm} %5mm vertical space
+
+The verification that $T(n) = \log_{3/2}\log_2 n$ satisfied the recurrence relation is given below.
+
+\vspace{3mm} %5mm vertical space
+
+$
+\begin{array} {lcl}
+T(n) & = & n^{1/3}T(n^{2/3}) + n  \\
+& = & n^\frac{1}{3} T(n^\frac{2}{3}) + n  \\
+& = & n^\frac{1}{3} (n^\frac{2}{3} \log_{3/2}\log_2 n^\frac{2}{3} ) + n \\
+& = & n \log_{3/2}\log_2 n^\frac{2}{3}  + n \\
+& = & n (\log_{3/2}\log_2 n^\frac{2}{3}  + 1) \\
+& = & n (\log_{3/2}(\frac{2}{3} \log_2 n)  + 1) \\
+& = & n (\log_{3/2}(\frac{2}{3}) + \log_{3/2}\log_2 n  + 1) \\
+& = & n (-1 + \log_{3/2}\log_2 n  + 1) \\
+T(n) & = & n \log_{3/2}\log_2 n \\
+\end{array}
+$
+
+\vspace{8mm} %5mm vertical space
+
+\newpage
+\noindent
+\textbf{Problem 2A}
+
+\vspace{4mm} %5mm vertical space
+
+The binary search algorithm divides the problem in half every time the method is called and the desired number is not found. Additionally, the binary search method does an equality check each time it is called, which means each method call is doing constant work. The one time the method does constant work slightly different than all other cases is when the length of the input list is less than 3. However, since this case also does constant work (check 2 numbers) and we care about asymptotic behavior we can assume that each layer does constant work $A$. Given the information above the following recurrence relation can be defined for the binary search algorithm,
+
+$$T(n) = T(\frac{n}{2}) + A$$
+
+\noindent
+Note: this recurrence relation describes the worst case scenario of the algorithm, in which the problem is broken down until 2 numbers remain. The best case scenario is when the desired number is in the center of the original list. In this case the performance of the algorithm is O(1).
+
+\vspace{3mm} %5mm vertical space
+
+\noindent
+Using the recursive tree method to analyze the recurrence relation:
+
+\begin{itemize}
+  \setlength{\itemsep}{-5pt}
+  \item[] Layer 1
+  \begin{itemize}
+     \itemsep0em
+     \item 1 block of size n with constant work A
+  \end{itemize}
+   \item[] Layer 2
+  \begin{itemize}
+     \itemsep0em
+     \item 1 block of size $\frac{n}{2}$ with constant work A
+  \end{itemize}
+   \item[] Layer 3
+  \begin{itemize}
+     \itemsep0em
+     \item 1 block of size $\frac{n}{4}$ with constant work A
+  \end{itemize}
+  \item[] ...
+   \item[] Layer i
+  \begin{itemize}
+     \itemsep0em
+     \item 1 block of size $\frac{n}{i^2}$ with constant work A
+  \end{itemize}
+  \item[] ...
+   \item[] Layer $\log_2 n$
+  \begin{itemize}
+     \itemsep0em
+     \item 1 block of size 2 with constant work A
+  \end{itemize}
+\end{itemize}
+
+Since the problem is divided in two every time the length of the recursive tree is given by $\log_2 n$. The running time can be analyzed as follows.
+\vspace{2mm} %5mm vertical space
+
+\renewcommand{\arraystretch}{1.5}
+$
+\begin{array} {lcl}
+T(n) &  = & \sum_{i=1}^{\# of layers} \text{merge cost of layer}_i \\
+& = & \sum_{i=1}^{\log_2 n} A \\
+& = & A \sum_{i=1}^{\log_2 n} 1 \\
+T(n) & = & A \log_2 n \\
+\end{array}
+$
+
+$$T(n) = A\log_2 n$$
+
+$$\mathbf{T(n) = O(\textbf{log n})}$$
+
+\vspace{3mm} %5mm vertical space
+
+Again, this is given as  big 0, not $\Theta$ because this is an upper bound for the algorithm. In the best case (when the desired value is in the middle of the list) the running time of the algorithm is constant.
+
+The running time can also be found using Master's theorem.
+
+$$T(n) = T(n/2) + \Theta(1)$$
+
+\begin{center}
+$
+\begin{array} {lr}
+a = 1, b = 2 \\
+f(n) = \Theta(n^0) & \text{ meaning } c=0\\
+\log_b a = \log_2 1 = 0 = c & \text{ implying Case 2}
+\end{array}
+$
+
+\vspace{2mm}
+From Master's Theorem $T(n) = O(n^c \text{log n}) = O(\text{log n})$
+\end{center}
+
+\vspace{8mm} %5mm vertical space
+
+\noindent
+\textbf{Problem 2B}
+
+\vspace{4mm} %5mm vertical space
+
+Like the binary search, the designed algorithm for finding the smallest element can begin by checking the middle element of the array $A$ (at location $k$) and its adjacent neighbors to the left and the right. Based on this check several different actions should be taken, detailed below:
+
+\begin{enumerate}
+   \item If A[k-1] $>$ A[k] and A[k] $>$ A[k+1] index k is in the decreasing section of the list. The smallest element must be to the right. Partition the list to the right starting at k.
+   \item If A[k-1] $<$ A[k] and A[k] $<$ A[k+1] index k is in the increasing section of the list. The smallest element must be to the left. Partition the list to the left starting at k.
+   \item If A[k-1] $>$ A[k] and A[k] $<$ A[k+1] then the element at index k must be the smallest element. Return A[k]. This can be considered the base case.
+\end{enumerate}
+
+Note: A[k-1] $<$ A[k] and A[k] $>$ A[k+1] if not a valid case given how the list has been described in the problem.
+
+\vspace{2mm}
+
+The psudo-code for the algorithm is given below:
+
+\begin{verbatim}
+smallest_element(A[1...n])
+
+    if length of A is 1 then return A[1]
+    if length of A is 2 then return min(A[1], A[2])
+
+    let k = n/2
+    Partition A into B, C
+        where B contains A[1...k-1] and C contains A[k+1...n]
+
+    if A[k-1]>A[k] and A[k] > A[k+1]
+        then return smallest_element(C)  // go right
+    if A[k-1]<A[k] and A[k] < A[k+1]
+        then return smallest_element(B)  // go left
+
+    // if this executes then A[k-1] > A[k] and A[k] < A[k+1]
+    return A[k]
+
+\end{verbatim}
+
+\noindent
+\textbf{Proof of correctness}
+\vspace{3mm} %5mm vertical space
+
+In this problem we are given an array A[1...n] that is first decreasing and then increasing. In other words there exists an index p such that $1 \leq p \leq n$ such that for $i < p$ and for all $i<p$, A[i] $>$ A[i+1] and for all $i\geq p$, A[i] $<$ A[i+1].
+
+First note if A[1...$a$, $b$...n] where A[p] = $b$ then the smallest element is $b$. This falls directly from the problem statement. Element $a$ is in the decreasing portion of the list meaning all elements to the left of $a$ are greater than $a$. Element $b$ falls in the increasing portion of the list meaning all elements to the right of $b$ are greater than $b$. Additionally, $a$ falls at the p-1 index, meaning A[p-1] $>$ A[p] or $a>b$ must be satisfied. If all elements from 1...p-2 are greater than the element at p-1, all elements from p+1...n are greater than the element at p, and the element p-1 is greater than the element at p it must follow that the element at p is the smallest in the array.
+
+\vspace{2mm}
+
+\noindent
+\textit{Proof by induction}
+
+\vspace{3mm}
+
+\noindent
+\textbf{Claim:} The algorithm works for size n. \\
+\textbf{Base case:} \\
+\textit{n=1:} The algorithm returns the only element in the array, which must be the smallest element in the array because it is the only element in the array.\\
+\textit{n=2:} The algorithm returns the minimum of the two elements, which produces the minimum value of the array.\\
+\textbf{Induction hypothesis:} The algorithm works for arrays of size $k$ where $2 \leq k < n$ \\
+\textbf{Proof: } \\
+
+Let A[1...n] be an array on size n that satisfies the problem statement, namely there exists some p ($1 \leq p \leq n$) such that for all $i<p$, A[i] $>$ A[i+1] and for all $i\geq p$, A[i] $<$ A[i+1].
+First it is proven that the algorithm divides the problem into a smaller problem of size $<n$. The algorithm first divides the length of the array by two. Then, if it does not find the smallest element it either partitions the array to the left or right of the center index. Thus, the algorithm divides the array into size $\frac{n}{2}$. Clearly it holds $\frac{n}{2} < n$.
+
+Next it is proven that the partitioned array $B$ preserves the loop invariant that some p exists such that for $i < p$ and for all $i<p$, B[i] $>$ B[i+1] and for all $i\geq p$, B[i] $<$ B[i+1]. There are three cases we must consider, detailed below. In these cases let k be the middle of the array A, that is $k = n/2$
+
+\begin{enumerate}
+   \item \textit{(k=p)}. In this case A[k] is returned. Therefore no partition is formed. As described above the smallest element in the array is p, thus the algorithm returns the correct value.
+   \item \textit{(k$<$p)}. In this case A[k] $>$ A[k+1]. The new partitioned list is B[k...p...n]. Given the problem statement (and loop invariant in A) it must hold that A[i] $>$ A[i+1] for $k \leq i < p$. Also given the problem statement (and loop invariant in A) it must hold that A[j] $<$ A[j+1] for $p < i \leq n$. Thus, since $k<p$ and $p<n$ there must be some i and j that satisfy the equations above. Thus, partition B has a decreasing than increasing section and the \textbf{loop invariant is maintained}.
+   \item \textit{(k$>$p)}. In this case A[k] $<$ A[k+1]. The new partitioned list is B[0...p...k]. Given the problem statement (and loop invariant in A) it must hold that A[i] $>$ A[i+1] for $0 \leq i < p$. Also given the problem statement (and loop invariant in A) it must hold that A[j] $<$ A[j+1] for $p < i \leq k$. Thus, since $k>p$ and $p>0$ there must be some i and j that satisfy the equations above. Thus, partition B has a decreasing than increasing section and the \textbf{loop invariant is maintained}.
+\end{enumerate}
+
+It has been proven that the algorithm divides the problem into one of size $\frac{n}{2}$, where $k =\frac{n}{2} < n$, and that the new partitioned list is first decreasing, then increasing. In other words the algorithm divides the problem into a problem matching the original problem statement and loop invariant but of size $<n$. The correctness of this solution holds by the induction hypothesis.
+
+\vspace{3mm} %5mm vertical space
+\noindent
+\textit{Running Time}
+\vspace{3mm} %5mm vertical space
+
+Finally, it can be shown that the above algorithm has the same running time as the binary search. Just like binary search the above the smallest element algorithm can be described with the recurrence relation:
+
+$$T(n) = T(\frac{n}{2}) + A$$
+
+The solution to this recurrence relation is given by $O(\log n)$. This can be seen by evaluating the recurrence relation with a recursion tree, where the are $\log_2 n$ layers and constant work per level. Each level $i$ has one block of size $n/2^i$. Again this running time is given as big O rather than big $\Theta$ because the best case for the smallest element algorithm is constant in the case where the smallest element is in the middle of the list.
+
+The small inductive proof that shows this designed algorithm has a running time of O(log n) is given below:
+
+\vspace{3mm} %5mm vertical space
+
+\noindent
+Given: the algorithm satisfies the recurrence relation, $T(n) = T(\frac{n}{2})$ + A, where A is a positive constant and T(2) = 1 \\
+Claim: for $n\geq2$, $T(n) \leq \log_2 n$  \\
+Hypothesis: $T(n) \leq \log_2 n$  for $2 \leq n \leq k$ \\
+Base case: for n = 2
+
+$T(2) = T(1) + A = 1 + A \leq log_2 2 = 1 $
+
+when A is chosen to be zero. Again this constant does not hold much significance since the base of T(1) is chosen arbitrarily.
+
+\vspace{1mm} %5mm vertical space
+\noindent
+\textit{Proof.}
+\vspace{1mm} %5mm vertical space
+
+\renewcommand{\arraystretch}{1.5}
+$
+\begin{array} {lcll}
+T(k) & = & T(\frac{k}{2}) + A & \text{from recursion} \\
+T(k) & \leq & \log_2 {\frac{k}{2}} + A & \text{induction hypothesis} \\
+& = & \log_2 k - \log_2 {2} + A \\
+& = & \log_2 k - 1 + A \\
+& \leq & \log_2 k + A  \\
+\end{array}
+$
+
+\vspace{8mm} %5mm vertical space
+
+\noindent
+\textbf{Problem 3}
+
+\vspace{4mm} %5mm vertical space
+
+The following is the implementation of the method \textit{garden(grid)} where grid is the nxn garden. Let $k$ in the following implementation be the length (or width) or the grid passed into the garden method, meaning in the first call $n=k$.
+
+\begin{enumerate}
+   \item If the grid (block of garden) has a length (and width) equal to 2 place a block in a proper orientation and \textbf{return}. In this base case 1 of the 4 blocks should already be occupied, thus there is only one proper way to orient the tile to fit.
+   \item If the grid (block of garden) has a length (and width) greater than 2 partition the garden into 4 uniform squares A, B, C, D of size $\frac{k^2}{4}$ where A has the tiles in the top left (0 $\rightarrow$ k/2, 0 $\rightarrow$ k/2), B has the tiles in the top right (k/2 $\rightarrow$ k, 0 $\rightarrow$ k/2), C has the tiles in the bottom left (k/2 $\rightarrow$ k, 0 $\rightarrow$ k/2), and D has the titles in the bottom right (n/2 $\rightarrow$ k, k/2 $\rightarrow$ k).
+   \item Place a tile in the middle of the passed in grid, at ($\frac{k}{2}$, $\frac{k}{2}$). Its orientation should be in a way such that after its placed A, B, C, and D each have one space occupied (either by a tile or tree)
+   \item Recurse - calling grid(A), grid(B), grid(C), and grid(D).
+\end{enumerate}
+
+\noindent
+Psudo-code is given below to make the described steps above more clear.
+
+\begin{verbatim}
+fill_garden(A[1...n])
+
+    if area of A = 4
+        then place tile in 3 empty spaces and RETURN
+
+    Partition A into B, C, D, E where each have area equal to
+    the area of a over 4 such that B corresponds to the
+    top left corner, C the top right, D the bottom left,
+    and E the bottom left
+
+    Place a tile in the center of A in an orientation such that
+    after placement B, C, D, and E each have exactly one occupied
+    space (either a tree or tile)
+
+    fill_garden(B)
+    fill_garden(C)
+    fill_garden(D)
+    fill_garden(E)
+
+\end{verbatim}
+
+\vspace{3mm} %5mm vertical space
+\noindent
+\textbf{Proof of correctness}
+\vspace{3mm} %5mm vertical space
+
+\noindent
+Problem statement: Let A be an n by n garden with one location occupied. Given the problem statement n is a power of 2. \\
+
+
+\noindent
+Base case: n = 2 (area equals 4) \\
+In this case the tile can be oriented in a way to avoid the one occupied location, regardless of its location in A. \\
+
+\noindent
+Let k be $\frac{n}{2}$. Since n is a power of 2, k must also be a power of 2. Let B, C, D, and E be $\frac{k}{2}$ by $\frac{k}{2}$ partitions of A corresponding to the four corners of A. Given A only has one occupied location, only one of the partitions can have an occupied location. Said differently, three of the partitions will be completely free. Thus, since the tile is an L with 3 tiles, it can be placed in the center of A with a tile in the three free partition, creating four partitions each with one occupied space. In this manner we have recreated the problem statement four times over, where $n=\frac{k}{2}$ and k still satisfies the necessary requirements of n (that it is a power of 2).
+
+
+To complete the proof of correctness it needs to be shown that the given algorithm approaches the base case. Let t be the length of the garden. The base case is reached when t = 2. The original garden has length n, where n is a power of 2. Each time the algorithm divides n by 2, thus creating a smaller power of 2. Eventually, successive divisions of a power of 2 by 2 will produce 2, the base case. More clearly, if the starting garden size (where size corresponds to the length) is $n = 2^i$ it will take $i$ iterations of the algorithm to produce a partition of the garden of size 2. The same argument holds for the width, given the symmetry of the problem.
+
+The above idea is summarized in a more formal inductive proof below.
+
+\vspace{2mm}
+
+\noindent
+\textbf{Claim}: The algorithm holds for grid size of k x k where k is a power of 2 and one of the locations is occupied (either by a tree or another tile).  \\
+\textbf{Induction Hypothesis}: the claim is satisfied by grids of size k where $2 \leq k < n$\\
+\textbf{Base case}: \textit{(n=2)}. The algorithm works for a 2 x 2 grid. This can easily be checked by placing the tree (occupied location) in any of the 4 locations. In each of these cases the tile can be oriented in such a way to satisfy filling the garden.\\
+\noindent
+\textbf{Inductive Proof}:
+
+\begin{center}
+Let the grid be an n x n. \\
+The algorithm creates four partitions A, B, C, D of size $\frac{n}{2}$ \\
+If
+
+
+\end{center}
+
+\vspace{3mm} %5mm vertical space
+\noindent
+\textit{Running time analysis}
+\vspace{3mm} %5mm vertical space
+
+Each recursion the algorithm does constant work (placing a tile) and divides the problem into four problems each with a size equal to n/2. This can be summarized by the recurrence relation, $$T(n) = 4T(\frac{n}{2}) + A$$
+
+\begin{center}
+$
+\begin{array} {lr}
+a = 2, b = 4 \\
+f(n) = \Theta(n^0) & \text{ meaning } c=0\\
+\log_b a = \log_4 2 = 2 > c & \text{ implying Case 1}
+\end{array}
+$
+
+\vspace{2mm}
+From Master's Theorem $T(n) = O(n^{\log_b a}) = O(n^2)$
+
+\end{center}
+
+$$\mathbf{T(n) = O(n^2)}$$
+
+\end{document}
